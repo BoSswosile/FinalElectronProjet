@@ -3,7 +3,7 @@ import { SplitterTop, SplitterBottom, SimpleText, CenterText } from './style'
 import { ArrayToString } from '../../utils/functions'
 
 const Game = () => {
-  const [words, setWords] = useState([])
+  const [words, setWords] = useState({ word: [] })
   const [testingList, setTestingList] = useState('')
   const [playingList, setPlayingList] = useState([])
   const [gameList, setGameList] = useState([])
@@ -11,6 +11,8 @@ const Game = () => {
   const [placement, setPlacement] = useState(0)
   const [countdown, setCountdown] = useState(3)
   const [timer, setTimer] = useState()
+  const [showArray, setShowArray] = useState([0])
+  const [arrayPlacement, setArrayPlacement] = useState(0)
   //useEffect to handle typing
 
   useEffect(() => {
@@ -45,7 +47,9 @@ const Game = () => {
   })
 
   useEffect(() => {
-    setWords(['test ', 'manger ', 'banane ', 'valid '])
+    //  console.log(window/);
+    // console.log(words) //'words',
+    //setWords(['test ', 'manger ', 'banane ', 'valid '])
     const interval = setInterval(() => {
       if (countdown === 0) {
         clearInterval(interval)
@@ -56,6 +60,10 @@ const Game = () => {
     }, 1000)
     return () => clearInterval(interval)
   }, [countdown])
+
+  useEffect(() => {
+   // window.easyjson.getEasyJson(setWords)
+  }, [])
 
   useEffect(() => {
     console.log(timer)
@@ -90,10 +98,7 @@ const Game = () => {
     console.log(array)
     console.log(testingList.split(' '))
     for (let i = 0; i < array.length; i++) {
-      console.log('try')
-      console.log('first :' + array[i] + 'last :' + testingList.split(' ')[i])
       if (array[i] === testingList.split(' ')[i]) {
-        console.log('adding 1')
         score++
       }
     }

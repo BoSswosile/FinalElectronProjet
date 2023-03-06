@@ -1,6 +1,6 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-const { contextBridge, ipcRenderer, ipcMain } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 
 // As an example, here we use the exposeInMainWorld API to expose the browsers
 // and node versions to the main window.
@@ -11,7 +11,7 @@ process.once('loaded', () => {
     getEasyJson: setWords => {
       ipcRenderer.send('get-easy-json')
       ipcRenderer.on('easyjson', (event, arg) => {
-        //    console.log(arg);
+        console.log(arg)
         setWords(arg)
       })
     }
