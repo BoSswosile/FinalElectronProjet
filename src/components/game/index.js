@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SplitterTop, SplitterBottom, SimpleText, CenterText } from './style'
+import { ArrayToString } from '../../utils/functions'
 
 const Game = () => {
   const [words, setWords] = useState([])
@@ -13,11 +14,11 @@ const Game = () => {
   //useEffect to handle typing
 
   useEffect(() => {
-    if (countdown > 0) {
+    if (countdown > 0 || timer === 0) {
       return
     } else {
       const handleKeyDown = event => {
-        setTestingList(words.toLocaleString().replace(/,/g, ''))
+        setTestingList(ArrayToString(words))
 
         // console.log(event.key, event.keyCode, event.code)
         //  console.log(testingList)
@@ -85,7 +86,18 @@ const Game = () => {
 
   const getScore = () => {
     let score = 0
-    //  gameList.
+    let array = ArrayToString(gameList).split(' ')
+    console.log(array)
+    console.log(testingList.split(' '))
+    for (let i = 0; i < array.length; i++) {
+      console.log('try')
+      console.log('first :' + array[i] + 'last :' + testingList.split(' ')[i])
+      if (array[i] === testingList.split(' ')[i]) {
+        console.log('adding 1')
+        score++
+      }
+    }
+    return score
   }
   return (
     <>
