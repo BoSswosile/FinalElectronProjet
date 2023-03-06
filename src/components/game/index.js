@@ -85,8 +85,8 @@ const Game = () => {
 
   const getScore = () => {
     let score = 0
-    gameList.
-
+    //  gameList.
+  }
   return (
     <>
       <SplitterTop>
@@ -102,7 +102,6 @@ const Game = () => {
             {char}
           </span>
         ))}
-        <SimpleText>{wordsScore}</SimpleText>
       </SplitterBottom>
     </>
   )
