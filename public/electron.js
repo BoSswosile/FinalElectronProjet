@@ -2,6 +2,7 @@
 const { app, BrowserWindow, protocol, ipcMain } = require('electron')
 const path = require('path')
 const url = require('url')
+var fs = require('fs')
 
 // Create the native browser window.
 function createWindow() {
@@ -101,6 +102,17 @@ app.on('web-contents-created', (event, contents) => {
       event.preventDefault()
     }
   })
+})
+
+ipcMain.on('get-easy-json', event => {
+  fs.readFile(
+    'C:\\Users\\Wosile\\Documents\\2022-2023\\Desktop\\RenduFinal\\src\\utils\\easy.json',
+    'utf8',
+    function (err, data) {
+      if (err) throw err
+      event.reply('easyjson', JSON.parse(data))
+    }
+  )
 })
 
 // In this file you can include the rest of your app's specific main process
