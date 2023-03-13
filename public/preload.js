@@ -9,11 +9,13 @@ process.once('loaded', () => {
   contextBridge.exposeInMainWorld('versions', process.versions)
   contextBridge.exposeInMainWorld('easyjson', {
     getEasyJson: setWords => {
-      ipcRenderer.send('get-easy-json')
       ipcRenderer.on('easyjson', (event, arg) => {
-        console.log(arg)
         setWords(arg)
-      })
+      }
+      )
+    }
+    , request : () => {
+      ipcRenderer.send('get-easy-json')
     }
   })
 })

@@ -1,43 +1,47 @@
 import React, { useEffect, useState } from 'react'
 import { SplitterTop, SplitterBottom, SimpleText, CenterText } from './style'
 import { ArrayToString } from '../../utils/functions'
-
+import Modal from '../modal'
 const Game = () => {
-  const [words, setWords] = useState({ word: [] })
-  const [testingList, setTestingList] = useState('')
-  const [playingList, setPlayingList] = useState([])
+  const [words, setWords] = useState({ words: [] })
+  const [splittedList, setSplittedList] = useState([])
   const [gameList, setGameList] = useState([])
   const [keyPressCode, setKeyPressCode] = useState(0)
   const [placement, setPlacement] = useState(0)
   const [countdown, setCountdown] = useState(3)
+  const [completeList, setCompleteList] = useState([])
   const [timer, setTimer] = useState()
-  const [showArray, setShowArray] = useState([0])
-  const [arrayPlacement, setArrayPlacement] = useState(0)
-  //useEffect to handle typing
+  const [displayList, setDisplayList] = useState([])
+  const [placementSize, setPlacementSize] = useState(0)
+  const [isGameEnded, setIsGameEnded] = useState(false)
+  const [score, setScore] = useState(0)
+  //useEffect to handle typingF
 
   useEffect(() => {
     if (countdown > 0 || timer === 0) {
       return
     } else {
       const handleKeyDown = event => {
-        setTestingList(ArrayToString(words))
-
-        // console.log(event.key, event.keyCode, event.code)
-        //  console.log(testingList)
         if (
           (event.keyCode >= 65 && event.keyCode <= 90) ||
           event.keyCode == 32
         ) {
           setGameList([...gameList, event.key])
           setPlacement(placement + 1)
+          setPlacementSize(placementSize + 1)
         } else if (event.keyCode == 8) {
-          // console.log('backspace')
           setGameList([...gameList.slice(0, -1)])
           setPlacement(placement - 1)
+          setPlacementSize(placementSize - 1)
         } else if (event.keyCode >= 48 && event.keyCode <= 57) {
           setGameList([...gameList, event.key])
           setPlacement(placement + 1)
+          setPlacementSize(placementSize + 1)
         }
+      }
+      if (placementSize === displayList[0].length) {
+        setPlacementSize(0)
+        setDisplayList([...displayList.slice(1)])
       }
       window.addEventListener('keydown', handleKeyDown)
       return () => {
@@ -47,13 +51,10 @@ const Game = () => {
   })
 
   useEffect(() => {
-    //  console.log(window/);
-    // console.log(words) //'words',
-    //setWords(['test ', 'manger ', 'banane ', 'valid '])
     const interval = setInterval(() => {
       if (countdown === 0) {
         clearInterval(interval)
-        setTimer(10)
+        setTimer(5)
       } else {
         setCountdown(countdown - 1)
       }
@@ -62,17 +63,16 @@ const Game = () => {
   }, [countdown])
 
   useEffect(() => {
-   // window.easyjson.getEasyJson(setWords)
+    window.easyjson.request()
+    window.easyjson.getEasyJson(setWords)
   }, [])
 
   useEffect(() => {
-    console.log(timer)
-
     const interval = setInterval(() => {
       if (timer === 0) {
         clearInterval(interval)
         console.log('game over')
-        console.log(getScore())
+        setScore(getScore())
       } else {
         setTimer(timer - 1)
       }
@@ -80,46 +80,93 @@ const Game = () => {
     return () => clearInterval(interval)
   }, [timer])
 
-  // console.log('test')
-  //   console.log(window.easyjson.getEasyJson(setWords))
   useEffect(() => {
-    //   console.log('gameList', gameList)
-    return () => {}
-  }, [gameList])
+    var z = 0
+    var test = Object.values(words)
+    var completeList = generateWord(test[0])
+    var arraybloc = []
+    setCompleteList(completeList)
+    completeList = ArrayToString(completeList).split()
+    for (let i = 0; i < test.length; i++) {
+      arraybloc.push(completeList[i].split(''))
+    }
+    setSplittedList(arraybloc[0])
+  }, [words])
 
   document.addEventListener('keydown', function search(e) {
     setKeyPressCode(e.keyCode)
     document.removeEventListener('keydown', search)
   })
 
+  const generateWord = array => {
+    var z = 0
+    var arrayValid = []
+    var temporaryDisplayState = []
+    var popped = ''
+    for (let i = 0; i < 300; i++, z++) {
+      var randomnum = Math.floor(Math.random() * array.length)
+      arrayValid.push(array[randomnum])
+      popped += '' + array[randomnum]
+      console.log(z)
+      if (z >= 15) {
+        console.log('separator')
+        console.log(popped)
+        temporaryDisplayState.push(popped)
+        popped = ''
+        z = 0
+      }
+    }
+    setDisplayList(temporaryDisplayState)
+    // console.log(popped);
+    // console.log(arrayValid);
+    return arrayValid
+  }
+
+  useEffect(() => {
+    console.log(displayList)
+  }, [displayList])
+
   const getScore = () => {
     let score = 0
     let array = ArrayToString(gameList).split(' ')
-    console.log(array)
-    console.log(testingList.split(' '))
     for (let i = 0; i < array.length; i++) {
-      if (array[i] === testingList.split(' ')[i]) {
+      if (array[i] === completeList[i].trim()) {
         score++
       }
     }
+    setIsGameEnded(true)
     return score
   }
   return (
     <>
       <SplitterTop>
-        <SimpleText>{words}</SimpleText>
-      </SplitterTop>{' '}
+        <SimpleText>
+          {gameList.map((char, index) => (
+            <span
+              key={index}
+              style={{ color: splittedList[index] === char ? 'green' : 'red' }}
+            >
+              {char}
+            </span>
+          ))}
+        </SimpleText>
+      </SplitterTop>
       {countdown === 0 ? <> </> : <CenterText>{countdown}</CenterText>}
       <SplitterBottom>
-        {gameList.map((char, index) => (
-          <span
-            key={index}
-            style={{ color: testingList[index] === char ? 'green' : 'red' }}
-          >
-            {char}
-          </span>
-        ))}
+        <SimpleText>
+          {displayList[0]}
+          <br />
+          {displayList[1]}
+          <br />
+          {displayList[2]}
+          <br />
+          {displayList[3]}
+          <br />
+          {displayList[4]}
+        </SimpleText>
+        {/* <SimpleText>{splittedList}</SimpleText> */}
       </SplitterBottom>
+      {isGameEnded ? <Modal score={score} /> : <></>}
     </>
   )
 }
