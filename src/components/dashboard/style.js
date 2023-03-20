@@ -20,3 +20,14 @@ export const SpaceEvenly = styled.div`
   display: flex;
   justify-content: space-evenly;
 `
+
+export const Title = styled.p`
+  font-size: 2.5em;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  // align all in center
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`

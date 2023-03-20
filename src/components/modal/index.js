@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { Button, CenterDivModal } from './style'
+import { useNavigate } from 'react-router-dom'
 
 const Index = ({ score }) => {
   const [result, setResult] = useState('')
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (score >= 0 && score <= 10) {
       setResult('What are you doing')
@@ -22,7 +24,11 @@ const Index = ({ score }) => {
   }, [])
   return (
     <div>
-      <h1>{score} wpm</h1>
+      <CenterDivModal>
+        <h1>{score} wpm</h1>
+        <p>Nickname : Yohan</p>
+        <Button onClick={() => navigate('/')}>Save Score</Button>
+      </CenterDivModal>
     </div>
   )
 }

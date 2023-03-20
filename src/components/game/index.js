@@ -54,7 +54,7 @@ const Game = () => {
     const interval = setInterval(() => {
       if (countdown === 0) {
         clearInterval(interval)
-        setTimer(5)
+        setTimer(30)
       } else {
         setCountdown(countdown - 1)
       }
@@ -74,6 +74,7 @@ const Game = () => {
         console.log('game over')
         setScore(getScore())
       } else {
+        console.log(timer)
         setTimer(timer - 1)
       }
     }, 1000)
@@ -107,24 +108,15 @@ const Game = () => {
       var randomnum = Math.floor(Math.random() * array.length)
       arrayValid.push(array[randomnum])
       popped += '' + array[randomnum]
-      console.log(z)
       if (z >= 15) {
-        console.log('separator')
-        console.log(popped)
         temporaryDisplayState.push(popped)
         popped = ''
         z = 0
       }
     }
     setDisplayList(temporaryDisplayState)
-    // console.log(popped);
-    // console.log(arrayValid);
     return arrayValid
   }
-
-  useEffect(() => {
-    console.log(displayList)
-  }, [displayList])
 
   const getScore = () => {
     let score = 0
@@ -139,6 +131,7 @@ const Game = () => {
   }
   return (
     <>
+      {isGameEnded ? <Modal score={score} /> : <></>}
       <SplitterTop>
         <SimpleText>
           {gameList.map((char, index) => (
@@ -166,7 +159,6 @@ const Game = () => {
         </SimpleText>
         {/* <SimpleText>{splittedList}</SimpleText> */}
       </SplitterBottom>
-      {isGameEnded ? <Modal score={score} /> : <></>}
     </>
   )
 }
