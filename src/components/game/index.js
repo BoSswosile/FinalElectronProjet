@@ -4,8 +4,8 @@ import { ArrayToString } from '../../utils/functions'
 import Modal from '../modal'
 const Game = () => {
   const [words, setWords] = useState({ words: [] })
-  const [splittedList, setSplittedList] = useState([])
   const [gameList, setGameList] = useState([])
+  const [currentSentence, setCurrentSentence] = useState([]) // remettre à zéro quand on passe à la phrase suivante
   const [keyPressCode, setKeyPressCode] = useState(0)
   const [placement, setPlacement] = useState(0)
   const [countdown, setCountdown] = useState(3)
@@ -14,6 +14,7 @@ const Game = () => {
   const [displayList, setDisplayList] = useState([])
   const [placementSize, setPlacementSize] = useState(0)
   const [isGameEnded, setIsGameEnded] = useState(false)
+  const [testList, setTestList] = useState([])
   const [score, setScore] = useState(0)
   //useEffect to handle typingF
 
@@ -27,22 +28,54 @@ const Game = () => {
           event.keyCode == 32
         ) {
           setGameList([...gameList, event.key])
+          setCurrentSentence([...currentSentence, event.key])
+
+          setDisplayList([
+            testList[0].slice(
+              currentSentence != null ? currentSentence.length + 1 : 0
+            ),
+            testList.slice(1)
+          ])
+
           setPlacement(placement + 1)
           setPlacementSize(placementSize + 1)
-        } else if (event.keyCode == 8) {
+        } else if (event.keyCode == 8 && currentSentence.length > 0) {
           setGameList([...gameList.slice(0, -1)])
+          setCurrentSentence([...currentSentence.slice(0, -1)])
+
           setPlacement(placement - 1)
           setPlacementSize(placementSize - 1)
+
+          setDisplayList([
+            testList[0].slice(
+              currentSentence != null ? currentSentence.length - 1 : 0
+            ),
+            testList.slice(1)
+          ])
         } else if (event.keyCode >= 48 && event.keyCode <= 57) {
           setGameList([...gameList, event.key])
+          setCurrentSentence([...currentSentence, event.key])
+
           setPlacement(placement + 1)
           setPlacementSize(placementSize + 1)
+
+          setDisplayList([
+            testList[0].slice(
+              currentSentence != null ? currentSentence.length + 1 : 0
+            ),
+            testList.slice(1)
+          ])
         }
       }
-      if (placementSize === displayList[0].length) {
+
+      if (placementSize === testList[0].length) {
         setPlacementSize(0)
-        setDisplayList([...displayList.slice(1)])
+        setTestList(testList.slice(1))
+        setDisplayList(testList)
+        console.log()
+        setCurrentSentence([])
       }
+
       window.addEventListener('keydown', handleKeyDown)
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
@@ -91,13 +124,16 @@ const Game = () => {
     for (let i = 0; i < test.length; i++) {
       arraybloc.push(completeList[i].split(''))
     }
-    setSplittedList(arraybloc[0])
   }, [words])
 
   document.addEventListener('keydown', function search(e) {
     setKeyPressCode(e.keyCode)
     document.removeEventListener('keydown', search)
   })
+
+  useEffect(() => {
+    setDisplayList(testList)
+  }, [testList])
 
   const generateWord = array => {
     var z = 0
@@ -114,7 +150,8 @@ const Game = () => {
         z = 0
       }
     }
-    setDisplayList(temporaryDisplayState)
+    setTestList(temporaryDisplayState)
+    setDisplayList(testList)
     return arrayValid
   }
 
@@ -133,31 +170,29 @@ const Game = () => {
     <>
       {isGameEnded ? <Modal score={score} /> : <></>}
       <SplitterTop>
-        <SimpleText>
-          {gameList.map((char, index) => (
-            <span
-              key={index}
-              style={{ color: splittedList[index] === char ? 'green' : 'red' }}
-            >
-              {char}
-            </span>
-          ))}
-        </SimpleText>
+        <SimpleText></SimpleText>
       </SplitterTop>
       {countdown === 0 ? <> </> : <CenterText>{countdown}</CenterText>}
       <SplitterBottom>
         <SimpleText>
+          {currentSentence.map((char, index) => (
+            <span
+              key={index}
+              style={{ color: testList[0][index] === char ? 'green' : 'red' }}
+            >
+              {char}
+            </span>
+          ))}
           {displayList[0]}
           <br />
-          {displayList[1]}
+          {testList[1]}
           <br />
-          {displayList[2]}
+          {testList[2]}
           <br />
-          {displayList[3]}
+          {testList[3]}
           <br />
-          {displayList[4]}
+          {testList[4]}
         </SimpleText>
-        {/* <SimpleText>{splittedList}</SimpleText> */}
       </SplitterBottom>
     </>
   )
