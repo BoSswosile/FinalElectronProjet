@@ -37,3 +37,15 @@ export const CenterText = styled.p`
   top: 50%;
   left: 50%;
 `
+
+// make a top left button that is fixed
+export const TopRightButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid purple;
+  border-radius: 3px;
+  width: 150px;
+`

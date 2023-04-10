@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { SplitterTop, SplitterBottom, SimpleText, CenterText } from './style'
+import {
+  SplitterTop,
+  SplitterBottom,
+  SimpleText,
+  CenterText,
+  TopRightButton
+} from './style'
 import { ArrayToString } from '../../utils/functions'
 import Modal from '../modal'
+import { useNavigate } from 'react-router-dom'
 const Game = () => {
   const [words, setWords] = useState({ words: [] })
   const [gameList, setGameList] = useState([])
@@ -16,6 +23,7 @@ const Game = () => {
   const [isGameEnded, setIsGameEnded] = useState(false)
   const [testList, setTestList] = useState([])
   const [score, setScore] = useState(0)
+  const navigate = useNavigate()
   //useEffect to handle typingF
 
   useEffect(() => {
@@ -87,7 +95,7 @@ const Game = () => {
     const interval = setInterval(() => {
       if (countdown === 0) {
         clearInterval(interval)
-        setTimer(30)
+        setTimer(60)
       } else {
         setCountdown(countdown - 1)
       }
@@ -168,12 +176,9 @@ const Game = () => {
   }
   return (
     <>
+      <TopRightButton onClick={() => navigate('/')}>Leave Game</TopRightButton>
       {isGameEnded ? <Modal score={score} /> : <></>}
       <SplitterTop>
-        <SimpleText></SimpleText>
-      </SplitterTop>
-      {countdown === 0 ? <> </> : <CenterText>{countdown}</CenterText>}
-      <SplitterBottom>
         <SimpleText>
           {currentSentence.map((char, index) => (
             <span
@@ -193,7 +198,9 @@ const Game = () => {
           <br />
           {testList[4]}
         </SimpleText>
-      </SplitterBottom>
+      </SplitterTop>
+      {countdown === 0 ? <CenterText>{timer}</CenterText>: <CenterText>{countdown}</CenterText>}
+      <SplitterBottom></SplitterBottom>
     </>
   )
 }

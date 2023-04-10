@@ -25,7 +25,9 @@ const Index = ({ score }) => {
   return (
     <div>
       <CenterDivModal>
-        <h1>{score * 2} wpm</h1>
+        <h1>
+          {score} wpm <br /> {result}
+        </h1>
         <p>Nickname : Yohan</p>
         <Button onClick={() => navigate('/')}>Save Score</Button>
       </CenterDivModal>
