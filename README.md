@@ -16,3 +16,6 @@ TypeRacer est un jeu de rapidité simple qui consiste a écrire des mots le plus
 - Trouver d'autres idées.
 - Base de design
 
+#### Mise a jour récente
+Lien vers la démo : https://youtu.be/EWRCabtjBuQ
+Le leaderboard n'a pas encore été fait

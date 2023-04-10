@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import { SpaceEvenly, Button, MainTitle, Title } from './style'
 import { useNavigate } from 'react-router-dom'
 const Dashboard = () => {
