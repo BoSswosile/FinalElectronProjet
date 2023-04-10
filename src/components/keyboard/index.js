@@ -39,7 +39,6 @@ const Index = ({ onPress }) => {
   return (
     <>
       {letters.map(letter => (
-        // make letterbox active if the letter is pressed
         <LetterBox onPress={onPress + 32 === letter.charCodeAt(0)} key={letter}>
           {letter}
         </LetterBox>

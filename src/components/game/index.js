@@ -7,7 +7,6 @@ import {
   TopRightButton,
   CenterDivModal,
   CenterButtons,
-  Title,
   Button
 } from './style'
 import { ArrayToString } from '../../utils/functions'
@@ -34,7 +33,7 @@ const Game = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (countdown > 0 || timer === 0) {
+    if (countdown > 0 || timer === 0 || isGameEnded === true) {
       return
     } else {
       const handleKeyDown = event => {
