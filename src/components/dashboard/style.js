@@ -31,20 +31,3 @@ export const Title = styled.p`
   left: 50%;
   transform: translate(-50%, -50%);
 `
-
-// create a centered modal div
-export const CenterDivModal = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  width: 80%;
-  height: auto;
-`
-
-// center double buttons
-export const CenterButtons = styled.div`
-  display: flex;
-  justify-content: center;
-`

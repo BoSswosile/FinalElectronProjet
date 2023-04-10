@@ -114,6 +114,16 @@ ipcMain.on('get-easy-json', event => {
     }
   )
 })
+ipcMain.on('get-hard-json', event => {
+  fs.readFile(
+    'C:\\Users\\Wosile\\Documents\\2022-2023\\Desktop\\RenduFinal\\src\\utils\\hard.json',
+    'utf8',
+    function (err, data) {
+      if (err) throw err
+      event.reply('hardjson', JSON.parse(data))
+    }
+  )
+})
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

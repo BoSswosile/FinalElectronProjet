@@ -11,11 +11,20 @@ process.once('loaded', () => {
     getEasyJson: setWords => {
       ipcRenderer.on('easyjson', (event, arg) => {
         setWords(arg)
-      }
-      )
-    }
-    , request : () => {
+      })
+    },
+    request: () => {
       ipcRenderer.send('get-easy-json')
+    }
+  })
+  contextBridge.exposeInMainWorld('hardjson', {
+    getHardJson: setWords => {
+      ipcRenderer.on('hardjson', (event, arg) => {
+        setWords(arg)
+      })
+    },
+    request: () => {
+      ipcRenderer.send('get-hard-json')
     }
   })
 })

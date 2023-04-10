@@ -4,18 +4,24 @@ import {
   SplitterBottom,
   SimpleText,
   CenterText,
-  TopRightButton
+  TopRightButton,
+  CenterDivModal,
+  CenterButtons,
+  Title,
+  Button
 } from './style'
 import { ArrayToString } from '../../utils/functions'
 import Modal from '../modal'
 import { useNavigate } from 'react-router-dom'
+import Keyboard from '../keyboard'
+
 const Game = () => {
   const [words, setWords] = useState({ words: [] })
   const [gameList, setGameList] = useState([])
-  const [currentSentence, setCurrentSentence] = useState([]) // remettre à zéro quand on passe à la phrase suivante
+  const [currentSentence, setCurrentSentence] = useState([])
   const [keyPressCode, setKeyPressCode] = useState(0)
   const [placement, setPlacement] = useState(0)
-  const [countdown, setCountdown] = useState(3)
+  const [countdown, setCountdown] = useState(10)
   const [completeList, setCompleteList] = useState([])
   const [timer, setTimer] = useState()
   const [displayList, setDisplayList] = useState([])
@@ -23,8 +29,9 @@ const Game = () => {
   const [isGameEnded, setIsGameEnded] = useState(false)
   const [testList, setTestList] = useState([])
   const [score, setScore] = useState(0)
+  const [difficulty, setDifficulty] = useState('')
+  const [gameStart, setGameStart] = useState(false)
   const navigate = useNavigate()
-  //useEffect to handle typingF
 
   useEffect(() => {
     if (countdown > 0 || timer === 0) {
@@ -96,17 +103,28 @@ const Game = () => {
       if (countdown === 0) {
         clearInterval(interval)
         setTimer(60)
-      } else {
+      } else if (countdown > 3) {
+        console.log('test')
+      } else if (countdown > 0 && countdown < 4) {
         setCountdown(countdown - 1)
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [countdown])
+  })
 
   useEffect(() => {
-    window.easyjson.request()
-    window.easyjson.getEasyJson(setWords)
-  }, [])
+    if (difficulty === 'easy') {
+      window.easyjson.request()
+      window.easyjson.getEasyJson(setWords)
+      setGameStart(true)
+      setCountdown(3)
+    } else if (difficulty === 'hard') {
+      window.hardjson.request()
+      window.hardjson.getHardJson(setWords)
+      setGameStart(true)
+      setCountdown(3)
+    }
+  }, [difficulty])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -176,31 +194,52 @@ const Game = () => {
   }
   return (
     <>
-      <TopRightButton onClick={() => navigate('/')}>Leave Game</TopRightButton>
-      {isGameEnded ? <Modal score={score} /> : <></>}
-      <SplitterTop>
-        <SimpleText>
-          {currentSentence.map((char, index) => (
-            <span
-              key={index}
-              style={{ color: testList[0][index] === char ? 'green' : 'red' }}
-            >
-              {char}
-            </span>
-          ))}
-          {displayList[0]}
-          <br />
-          {testList[1]}
-          <br />
-          {testList[2]}
-          <br />
-          {testList[3]}
-          <br />
-          {testList[4]}
-        </SimpleText>
-      </SplitterTop>
-      {countdown === 0 ? <CenterText>{timer}</CenterText>: <CenterText>{countdown}</CenterText>}
-      <SplitterBottom></SplitterBottom>
+      {gameStart ? (
+        <>
+          {isGameEnded ? <Modal score={score} /> : <></>}
+          <SplitterTop>
+            <TopRightButton onClick={() => navigate('/')}>
+              Leave Game
+            </TopRightButton>
+            <SimpleText>
+              {currentSentence.map((char, index) => (
+                <span
+                  key={index}
+                  style={{
+                    color: testList[0][index] === char ? 'green' : 'red'
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+              {displayList[0]}
+              <br />
+              {testList[1]}
+              <br />
+              {testList[2]}
+              <br />
+              {testList[3]}
+              <br />
+              {testList[4]}
+            </SimpleText>
+          </SplitterTop>
+          {countdown === 0 ? (
+            <CenterText>{timer}</CenterText>
+          ) : (
+            <CenterText>{countdown}</CenterText>
+          )}
+        </>
+      ) : (
+        <CenterDivModal>
+          <CenterButtons>
+            <Button onClick={() => setDifficulty('easy')}>Easy</Button>
+            <Button onClick={() => setDifficulty('hard')}>Hard</Button>
+          </CenterButtons>
+        </CenterDivModal>
+      )}
+      <SplitterBottom>
+        <Keyboard onPress={keyPressCode}></Keyboard>
+      </SplitterBottom>
     </>
   )
 }
